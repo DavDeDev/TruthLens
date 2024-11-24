@@ -1,14 +1,35 @@
-# TruthLens
+# TruthLens - Hackathon Project Submission
 
-<img src="https://truthlens.com/og.png" style="aspect-ratio:1.985"></img>
+**Slogan**: *Challenge Bias, Embrace Balance, Ignite Civic Insight*  
 
-I built TruthLens for the Vercel + Nvidia 2-hour hackathon. It turns any YouTube video into a transcribed `.txt` file.
+TruthLens is a web application that helps users assess the ideological bias of media content on the internet. With a simple "left" or "right" bias detector, TruthLens aims to provide users with the tools to explore alternative perspectives, break out of echo chambers, and engage in deeper civic dialogue.
 
-[**This project won first place in the hackathon 🏆**](https://x.com/FernandoTheRojo/status/1859848547316924465)
+### :tools: Built With:
+- **Next.js**: A React framework for building optimized web applications with server-side rendering and static site generation.
+- **Vercel**: For hosting and easy deployment.
+- **Llama (AI)**: Natural language processing to analyze and determine the ideological leanings of media content.
 
-It's hosted at [truthlens.com](https://truthlens.com). However, YouTube has been rate limiting requests coming from the lambda, so if you want to use it, you'll have more luck running it locally.
+## Features:
+- **Bias Detection**:  
+  Enter the URL of a media content, and TruthLens analyzes it to classify the content as either "left" or "right"-leaning.  
 
-If there's interest, maybe I can set up a self-hosted proxy or raspberry pi for the requests (until that inevitably gets rate limited).
+- **Explore Opposite Views**:  
+  Due to its detection, users are encouraged to explore other viewpoints.
+
+- **Intuitive User Interface**:  
+  A clean and simple UI, designed to ensure a smooth user experience.
+
+---
+
+## :robot: How It Works:
+1. **Media Bias Detection**:  
+   When users input media content, TruthLens uses AI (Llama API) to process the content and classify it based on political ideology.
+   
+2. **Classification Results**:  
+   The application returns a "left" or "right" label, depending on the detected bias of the media source. TruthLens analyzes the transcript for words and ideas presented in it.
+
+3. **Alternate Viewpoints**:  
+   Hence, TruthLens enables people to explore other viewpoints by educating themselves by bias, and echo chambers.
 
 ## Local development
 
