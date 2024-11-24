@@ -4403,9 +4403,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"you2txt@workspace:.":
+"truthlens@workspace:.":
   version: 0.0.0-use.local
-  resolution: "you2txt@workspace:."
+  resolution: "truthlens@workspace:."
   dependencies:
     "@hookform/resolvers": "npm:^3.9.1"
     "@radix-ui/react-accordion": "npm:^1.2.1"

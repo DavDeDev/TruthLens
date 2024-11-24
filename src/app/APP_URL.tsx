@@ -1,1 +1,1 @@
-export const APP_URL = "you2txt.com";
+export const APP_URL = "truthlens.com";

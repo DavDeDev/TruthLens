@@ -123,11 +123,6 @@ export default function Page() {
               disabled={mutation.loading}
               required
               autoFocus
-              style={
-                {
-                  // boxShadow: "0 8px 29px -2px",
-                }
-              }
             />
           </div>
 
@@ -189,11 +184,7 @@ export default function Page() {
           }}
         />
 
-        <a target='_blank' href='https://x.com/fernandotherojo'>
-          <footer className='fixed bottom-4 right-4 text-sm text-muted-foreground'>
-            By @FernandoTheRojo
-          </footer>
-        </a>
+       
       </main>
     </div>
   );
