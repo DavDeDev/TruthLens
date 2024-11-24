@@ -27,9 +27,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useAsyncCallback } from "react-async-hook";
 
-import { AlertCircle, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Slider } from "@/components/ui/slider";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 
 
@@ -55,7 +54,8 @@ function useMutation() {
       const title = response.headers.get("title");
       const imgUrl = response.headers.get("img-url");
       const politicalOrientation = response.headers.get('orientation');
-      const explanation = response.headers.get('explanation');
+      const explanationHeader = response.headers.get('explanation');
+      const explanation = explanationHeader ? decodeURIComponent(atob(explanationHeader)) : '';
 
       if (politicalOrientation && explanation) {
         setPoliticalOrientation({
@@ -114,19 +114,19 @@ export default function FactChecker() {
   }
 
   const getOrientationColor = (score: number) => {
-    if (score < 20) return "bg-red-500"
-    if (score < 40) return "bg-orange-500"
-    if (score < 60) return "bg-yellow-500"
-    if (score < 80) return "bg-green-500"
-    return "bg-blue-500"
+    if (score < 20) return "bg-blue-700"
+    if (score < 40) return "bg-blue-500"
+    if (score < 60) return "bg-gray-500"
+    if (score < 80) return "bg-red-500"
+    return "bg-red-700"
   }
 
   const getOrientationTextColor = (score: number) => {
-    if (score < 20) return "text-red-600"
-    if (score < 40) return "text-orange-600"
-    if (score < 60) return "text-yellow-600"
-    if (score < 80) return "text-green-600"
-    return "text-blue-600"
+    if (score < 20) return "text-blue-700"
+    if (score < 40) return "text-blue-500"
+    if (score < 60) return "text-gray-500"
+    if (score < 80) return "text-red-500"
+    return "text-red-700"
   }
 
   const getProgressWidth = (score: number) => {

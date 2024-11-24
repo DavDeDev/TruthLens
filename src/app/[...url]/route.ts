@@ -92,25 +92,25 @@ export async function GET(request: Request): Promise<Response> {
     });
 
     // Test the same prompt and console log it
-    console.log("SHOULD BE THE SAME", await generateText({
-      model: groq('llama-3.1-70b-versatile'),
-      prompt: `Analyze the following transcript and provide a political orientation score on a scale of 0 (left) to 100 (right). Include a short explanation for the score:
-      Transcript: ${combinedText}`,
-    })
-    )
+    // console.log("SHOULD BE THE SAME", await generateText({
+    //   model: groq('llama-3.1-70b-versatile'),
+    //   prompt: `Analyze the following transcript and provide a political orientation score on a scale of 0 (left) to 100 (right). Include a short explanation for the score:
+    //   Transcript: ${combinedText}`,
+    // })
+    // )
 
-     // Analyze political orientation using AI
+    // Analyze political orientation using AI
     let politicalAnalysis;
     // try {
-      politicalAnalysis = await generateObject({
+    politicalAnalysis = await generateObject({
       model: groq('llama-3.1-70b-versatile'),
       schema: z.object({
-        orientation: z.number().min(0).max(100),
-        explanation: z.string(),
+        orientation: z.union([z.number().min(0).max(100), z.string()]),
+                explanation: z.string(),
       }),
       prompt: `Analyze the following transcript and provide a political orientation score, only send the number from 0, meaning left most, to 100, most right. Include a short explanation for the score:
       Transcript: ${combinedText}`,
-      });
+    });
     // } catch (error) {
     //   console.error("Political analysis failed, retrying...", error);
     //   politicalAnalysis = await generateText({
@@ -126,6 +126,7 @@ export async function GET(request: Request): Promise<Response> {
     console.log(politicalAnalysis)
 
     const { orientation, explanation } = politicalAnalysis.object;
+
 
     // Include orientation and explanation in the headers
     headers.set("orientation", orientation.toString());
