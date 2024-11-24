@@ -18,7 +18,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TruthLens - by Fernando Rojo",
+  title: "TruthLens",
   description: "YouTube Video → txt file",
   openGraph: {
     images: [
