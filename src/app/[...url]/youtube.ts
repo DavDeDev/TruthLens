@@ -116,8 +116,6 @@ export async function transcriptFromYouTubeId(
   const captions =
     playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
 
-
-  console.log("[CAPTIONSSSSSSSSSSSSSSSSS] ", JSON.stringify(playerResponse.captions));
   console.log("[captions]", JSON.stringify(playerResponse.captions));
   console.log("[captions][keys]", Object.keys(playerResponse));
   Object.keys(playerResponse).forEach((key) => {
@@ -130,7 +128,7 @@ export async function transcriptFromYouTubeId(
   );
   if (!captions?.length) {
     throw new TranscriptError(
-      "We hit a rate limit. Fernando is probably checking on it. You can run the open source code on your own laptop to get around it. https://github.com/nandorojo/truthlens"
+      "We hit a rate limit. Fernando is probably checking on it. You can run the open source code on your own laptop to get around it. https://github.com/nandorojo/you2txt"
     );
   }
 

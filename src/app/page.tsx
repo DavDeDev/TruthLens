@@ -29,13 +29,24 @@ import { useAsyncCallback } from "react-async-hook";
 
 import { AlertCircle, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Slider } from "@/components/ui/slider";
+
+
+
+// Add interface for political orientation
+interface PoliticalOrientation {
+  score: number;
+  explanation: string;
+}
 
 function useMutation() {
+  // Add state setter function parameter
   return useAsyncCallback(
     async (
       url: string,
       includeTimestamps: boolean,
-      filterOutMusic: boolean
+      filterOutMusic: boolean,
+      setPoliticalOrientation: (orientation: PoliticalOrientation | null) => void
     ) => {
       const response = await fetch(
         `/${url}&timestamps=${includeTimestamps}&filterOutMusic=${filterOutMusic}`
@@ -43,9 +54,18 @@ function useMutation() {
       const id = response.headers.get("id");
       const title = response.headers.get("title");
       const imgUrl = response.headers.get("img-url");
+      const politicalOrientation = response.headers.get('orientation');
+      const explanation = response.headers.get('explanation');
+
+      if (politicalOrientation && explanation) {
+        setPoliticalOrientation({
+          score: parseInt(politicalOrientation),
+          explanation,
+        });
+      }
+      
       if (id && title && imgUrl) {
         const s = useTranscriptionHistory.getState();
-
         s.actions.addVideo({
           id: decodeURIComponent(atob(id)),
           title: decodeURIComponent(atob(title)),
@@ -76,16 +96,46 @@ export default function FactChecker() {
   const [includeTimestamps, setIncludeTimestamps] = useState(true)
   const [filterOutMusic, setFilterOutMusic] = useState(true)
   const mutation = useMutation()
+  const [politicalOrientation, setPoliticalOrientation] = useState<PoliticalOrientation | null>(null);
+  
 
   const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!url) return
-    await mutation.execute(url, includeTimestamps, filterOutMusic)
+    await mutation.execute(url, includeTimestamps, filterOutMusic, setPoliticalOrientation)
+  }
+
+  const getOrientationLabel = (score: number) => {
+    if (score < 20) return "Far Left"
+    if (score < 40) return "Left"
+    if (score < 60) return "Center"
+    if (score < 80) return "Right"
+    return "Far Right"
+  }
+
+  const getOrientationColor = (score: number) => {
+    if (score < 20) return "bg-red-500"
+    if (score < 40) return "bg-orange-500"
+    if (score < 60) return "bg-yellow-500"
+    if (score < 80) return "bg-green-500"
+    return "bg-blue-500"
+  }
+
+  const getOrientationTextColor = (score: number) => {
+    if (score < 20) return "text-red-600"
+    if (score < 40) return "text-orange-600"
+    if (score < 60) return "text-yellow-600"
+    if (score < 80) return "text-green-600"
+    return "text-blue-600"
+  }
+
+  const getProgressWidth = (score: number) => {
+    return `w-[${score}%]`
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-     
+
       <header className="border-b bg-white">
         <div className="container flex h-16 items-center px-4">
           <div className="flex items-center space-x-2">
@@ -101,15 +151,15 @@ export default function FactChecker() {
         <HistoryDialog />
       </header>
       <aside className='z-[0] flex-col hidden lg:flex w-[250px] bg-muted/15 pt-16 gap-2 h-full fixed bottom-0'>
-      <ScrollArea>
+        <ScrollArea>
 
-        <div className='flex flex-col gap-2 flex-1 m-2 mt-0 bg-muted rounded-lg p-4'>
-          <h2 className='font-medium tracking-tight'>Recents</h2>
-          <div className='flex flex-col gap-1'>
-            <History />
+          <div className='flex flex-col gap-2 flex-1 m-2 mt-0 bg-muted rounded-lg p-4'>
+            <h2 className='font-medium tracking-tight'>Recents</h2>
+            <div className='flex flex-col gap-1'>
+              <History />
+            </div>
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
       </aside>
       <main className="container mx-auto p-4 md:p-8">
         <Card className="mx-auto max-w-3xl">
@@ -174,7 +224,7 @@ export default function FactChecker() {
               </div>
             </form>
 
-            {mutation.result && (
+            {mutation.result&&mutation && (
               <div className="space-y-4 mt-6">
                 <Tabs defaultValue="transcript" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
@@ -201,7 +251,8 @@ export default function FactChecker() {
                       Copy Transcript
                     </Button>
                   </TabsContent>
-                  <TabsContent value="analysis" className="space-y-4">
+                  {politicalOrientation && (
+                    <TabsContent value="analysis" className="space-y-4">
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Fact Check</AlertTitle>
@@ -209,6 +260,37 @@ export default function FactChecker() {
                         Analysis of factual claims will appear here after processing.
                       </AlertDescription>
                     </Alert>
+                    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Political Orientation Analysis</h3>
+      <div className="rounded-lg border p-4">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="font-semibold">Political Bias</h3>
+          <span className={getOrientationTextColor(politicalOrientation.score)}>
+            {getOrientationLabel(politicalOrientation.score)}
+          </span>
+        </div>
+        <div className="space-y-2">
+          <div className="h-2 rounded-full bg-gray-200">
+            <div 
+              className={`h-2 rounded-full transition-all duration-500 ${getOrientationColor(politicalOrientation.score)}`} 
+              style={{ width: `${politicalOrientation.score}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>Far Left</span>
+            <span>Center</span>
+            <span>Far Right</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-muted/50 p-4 rounded-lg">
+        <p className="text-sm leading-relaxed">
+          {politicalOrientation.explanation}
+        </p>
+      </div>
+    </div>
+
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Bias Analysis</AlertTitle>
@@ -217,6 +299,7 @@ export default function FactChecker() {
                       </AlertDescription>
                     </Alert>
                   </TabsContent>
+              )}
                 </Tabs>
               </div>
             )}
